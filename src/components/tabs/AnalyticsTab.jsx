@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { DUMMY_ANALYTICS } from "../../data/dummyData";
-import LocalMarketCard from "./charts/LocalMarketCard";
-import DemandTrendCard from "./charts/DemandTrendCard";
-import SearchInterestCard from "./charts/SearchInterestCard";
-import DemandOverTimeChart from "./charts/DemandOverTimeChart";
-import ProfitOpportunityCard from "./charts/ProfitOpportunityCard";
+import LocalMarketCard from "./Charts/LocalMarketCard";
+import DemandTrendCard from "./Charts/DemandTrendCard";
+import SearchInterestCard from "./Charts/SearchInterestCard";
+import DemandOverTimeChart from "./Charts/DemandOverTimeChart";
+import ProfitOpportunityCard from "./Charts/ProfitOpportunityCard";
 
 export default function AnalyticsTab({ category }) {
   const categoryId = category.id || "candle"; // Handle both category object and string

@@ -141,3 +141,26 @@ def delete_all_conversations(user_id: str, category: str):
 
         _save(_CONV_PATH, conversations)
         _save(_ACTIVE_PATH, active)
+
+
+def delete_conversation(user_id: str, category: str, conversation_id: str):
+    with _lock:
+        conversations = _load(_CONV_PATH)
+        active = _load(_ACTIVE_PATH)
+        key = _key(user_id, category)
+
+        if key in conversations and conversation_id in conversations[key]:
+            del conversations[key][conversation_id]
+            _save(_CONV_PATH, conversations)
+
+        if active.get(key) == conversation_id:
+            active.pop(key, None)
+            _save(_ACTIVE_PATH, active)
+
+
+def set_active_conversation(user_id: str, category: str, conversation_id: str):
+    with _lock:
+        active = _load(_ACTIVE_PATH)
+        key = _key(user_id, category)
+        active[key] = conversation_id
+        _save(_ACTIVE_PATH, active)

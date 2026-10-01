@@ -13,8 +13,12 @@ import TutorialsTab from "../tabs/TutorialsTab";
 import ChatHistoryTab from "../tabs/ChatHistoryTab";
 
 const TAB_COMPONENTS = {
-  analytics: AnalyticsTab, calculator: CalculatorTab, stores: StoreLocatorTab,
-  artists: SimilarArtistsTab, tutorials: TutorialsTab, history: ChatHistoryTab,
+  analytics: AnalyticsTab,
+  calculator: CalculatorTab,
+  stores: StoreLocatorTab,
+  artists: SimilarArtistsTab,
+  tutorials: TutorialsTab,
+  history: ChatHistoryTab,
 };
 
 export default function CategoryDashboard() {
@@ -29,7 +33,13 @@ export default function CategoryDashboard() {
 
   return (
     <div className="flex h-screen bg-clay-50">
-      <Sidebar category={category} tabs={tabs} activeView={activeView} onNavigate={setActiveView} onProfileClick={() => setProfileOpen(true)} />
+      <Sidebar
+        category={category}
+        tabs={tabs}
+        activeView={activeView}
+        onNavigate={setActiveView}
+        onProfileClick={() => setProfileOpen(true)}
+      />
 
       <main className="flex flex-1 flex-col overflow-hidden p-4">
         {activeView === "chat" ? (
@@ -37,10 +47,15 @@ export default function CategoryDashboard() {
         ) : (
           <section className="flex h-full flex-col overflow-hidden rounded-xl border border-clay-200 bg-white">
             <div className="border-b border-clay-200 px-4 py-3">
-              <p className="font-display text-base text-ink-900">{tabs.find((t) => t.key === activeView)?.label}</p>
+              <p className="font-display text-base text-ink-900">
+                {tabs.find((t) => t.key === activeView)?.label}
+              </p>
             </div>
             <div className="flex-1 overflow-y-auto p-4">
-              <ActiveTabComponent category={category} />
+              <ActiveTabComponent
+                category={category}
+                onSwitchToChat={() => setActiveView("chat")}
+              />
             </div>
           </section>
         )}

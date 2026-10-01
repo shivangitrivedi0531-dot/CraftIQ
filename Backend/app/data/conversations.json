@@ -14,21 +14,6 @@
           "timestamp": "2026-10-01T05:53:08.504793+00:00"
         }
       ]
-    },
-    "2a87ed1f-5d55-45d1-aaaa-96a8952eddbb": {
-      "created_at": "2026-10-01T05:53:58.603383+00:00",
-      "messages": [
-        {
-          "role": "user",
-          "text": "hello how are u??",
-          "timestamp": "2026-10-01T05:54:17.617781+00:00"
-        },
-        {
-          "role": "assistant",
-          "text": "Hello! I'm doing great, thank you for asking. How are things in your resin studio today? Are you working on any new pieces, or dealing with any questions about mixing, pricing, or troubleshooting? I'm here to help!",
-          "timestamp": "2026-10-01T05:54:17.621923+00:00"
-        }
-      ]
     }
   },
   "demo-user::candle": {
@@ -44,6 +29,58 @@
           "role": "assistant",
           "text": "Welcome to the wonderful (and slightly addictive) world of candle art! Whether you want to make sculptural pillar candles, colourful dessert candles, or delicate floral wax melts, starting with the basics is key. \n\nSince you are diving into *art* candles rather than just standard container candles, here is a quick roadmap to get you started:\n\n### 1. Choose Your Wax Wisely\nFor art and sculptural candles, regular container soy wax (which is soft and meant to be burned in a jar) **won't work**\u2014it will melt into a puddle immediately. \n*   **Pillar/Sculptural Wax:** You want a stiffer wax blend, like a **Soy-Paraffin blend** or **Pure Beeswax / Paraffin**. These hold sharp details and shrink slightly as they cool, making them easy to pop out of silicone molds.\n*   **Container Art (e.g., bubble candles in trays, gel wax seascapes):** You can use standard Golden Wax 464 or coconut-soy for these.\n\n### 2. Essential Equipment for Art Candles\nDon't buy everything at once, but you will soon need:\n*   **Molds:** Silicone molds are best for sculptural candles (bubble cubes, female forms, bears, florals). \n*   **A Melting Pitcher & Kitchen Scale:** Always measure wax by **weight (grams)**, not volume, for consistency.\n*   **A Digital Thermometer:** Temperature control is everything in candle making (pouring too hot ruins the finish; too cold causes cracks).\n*   **Wicks & Wick Pins:** If your sculpture is meant to be burned, you need a wick. (Pro-tip: Many art candles are actually meant just for decor, but if they burn, you need the right size wick).\n\n### 3. Fun Techniques to Explore First\n*   **Embeds & Whipped Wax:** Making wax \"whipped cream\" or \"frosting\" for coffee or cake candles using a hand mixer.\n*   **Colour Blocking & Layering:** Pouring different coloured wax at angles to create modern, abstract art pieces.\n*   **Botanical Embedding:** Pressing dried flowers onto the outside of pillar candles.\n\n**Where would you like to start?** Are you interested in making **sculptural mold candles** (like bubble cubes and shapes), **dessert/food candles**, or something else? Tell me your vision and I'll give you a step-by-step guide!",
           "timestamp": "2026-10-01T05:54:59.803387+00:00"
+        },
+        {
+          "role": "user",
+          "text": "what are the price of candels?",
+          "timestamp": "2026-10-01T10:32:41.828647+00:00"
+        },
+        {
+          "role": "assistant",
+          "text": "Pricing handmade art candles is one of the hardest parts of the business because people often compare them to mass-produced candles at Target or IKEA. But your candles are **art**, and they take time, skill, and quality ingredients. \n\nTo price your candles profitably (so you actually pay yourself for your time), you need a formula. Here is how to break it down, along with realistic market prices for handmade art candles.\n\n---\n\n### The Golden Pricing Formula\nNever guess your prices. Use this standard maker\u2019s formula:\n\n$$\\text{(Cost of Materials} + \\text{Packaging)} \\times 2 \\text{ (Wholesale)} \\times 2 \\text{ (Retail) = Final Retail Price}$$\n\nAlternatively, use the **Hourly Wage Formula**:\n$$\\text{Materials} + \\text{Packaging} + (\\text{Hours Spent} \\times \\text{Your Desired Hourly Rate}) = \\text{Price}$$\n\n*Example:* If a bubble candle costs you $2.50 in wax, wick, and dye to make, and it takes you 30 minutes of active work (at $15/hr, that's $7.50):\n$2.50 (materials) + $7.50 (labor) = **$10.00 minimum price just to break even.** You would want to sell it for **$20 to $25** to make a real profit.\n\n---\n\n### Realistic Market Prices for Handmade Art Candles\nDepending on where you sell (online vs. local craft markets) and the complexity of the art, here are realistic price ranges:\n\n#### 1. Small Sculptural & Mold Candles (e.g., Bubble Cubes, Mini Bears, Tapers, Shells)\n*   **Size:** Small (approx. 2 to 4 inches)\n*   **Realistic Price:** **$12 \u2013 $22**\n*   *Why:* They are quick to demold, but require specialty pillar wax and careful handling.\n\n#### 2. Large or Complex Sculptural Art (e.g., Human Body Forms, Large Geometric Pillars, Detailed Florals)\n*   **Size:** Medium to Large\n*   **Realistic Price:** **$25 \u2013 $45+**\n*   *Why:* These take up a lot of wax, take longer to cure, and often require multiple pours or intricate wick-threading.\n\n#### 3. Dessert & Food Art Candles (e.g., Cereal bowls, Cake slices, Coffee/Latte candles)\n*   **Size:** Varies\n*   **Realistic Price:** **$20 \u2013 $38**\n*   *Why:* These are **labor-intensive**. You have to whip wax, make embeds (like wax strawberries or fruit), and pipe details. Customers pay more for the high visual artistry and time involved.\n\n#### 4. Hand-Painted or Terrazzo/Embedded Pillar Candles\n*   **Size:** Standard Pillar\n*   **Realistic Price:** **$24 \u2013 $40**\n*   *Why:* Hand-painting wax with candle-safe paint or embedding hundreds of color chips takes significant artistic skill and time.\n\n---\n\n### Factors That Let You Charge More:\n*   **Aesthetics & Branding:** High-end packaging, beautiful labels, and a cohesive Instagram feed make a $30 candle look like a luxury item.\n*   **Fragrance vs. Unscented:** Many art candles are actually sold *unscented* strictly for decor. If you add high-end, phthalate-free fragrance oils, you can increase the price by $3\u2013$5.\n*   **Beeswax:** If you use 100% pure beeswax (which is naturally expensive and smells like honey), customers expect to pay a premium.\n\n**Pro Tip for Beginners:** Don't underprice your work just because you're new! If you sell your art too cheaply, people assume it's low quality, and you will burn out trying to fulfill orders for pennies. \n\nAre you planning to sell your art candles online (like Etsy or your own website), or at local in-person markets? That can also help determine your pricing strategy!",
+          "timestamp": "2026-10-01T10:32:41.831204+00:00"
+        }
+      ]
+    },
+    "46cdf00e-9465-4abb-ba18-baecebe6170f": {
+      "created_at": "2026-10-01T10:32:58.592553+00:00",
+      "messages": [
+        {
+          "role": "user",
+          "text": "hello how are you",
+          "timestamp": "2026-10-01T10:33:10.733465+00:00"
+        },
+        {
+          "role": "assistant",
+          "text": "Hello! I'm doing great, thank you for asking. Ready to help you with whatever your candle-making business needs today\u2014whether it's troubleshooting a pesky batch of sinkholes, figuring out profit margins, or testing new wicks. \n\nWhat's on your workbench today?",
+          "timestamp": "2026-10-01T10:33:10.737666+00:00"
+        },
+        {
+          "role": "user",
+          "text": "i want to start candle making",
+          "timestamp": "2026-10-01T10:48:20.490549+00:00"
+        },
+        {
+          "role": "assistant",
+          "text": "That is so exciting! Welcome to the world of candle making\u2014it\u2019s an amazing craft, but it\u2019s definitely as much of a science as it is an art. \n\nSince you're just starting out, my biggest piece of advice right away is: **don't invest in a massive amount of bulk inventory just yet.** Start small, master the fundamentals of one wax type, and test thoroughly before you ever try to sell a single candle.\n\nTo help me point you in the right direction, let's figure out your game plan. Tell me a bit about what you're picturing:\n\n1. **What is your main goal?** Are you looking to make candles just as a fun hobby/gifts, or is your end goal to launch a business and sell them?\n2. **What style of candles are you drawn to?** (e.g., traditional container candles in glass jars, colorful pillar candles, funky sculptural/bubble candles, or wax melts?)\n3. **What is your setup space like?** (A corner of the kitchen, a dedicated craft room, etc.?)\n\nOnce you let me know, we can talk about the best beginner wax to start with and a basic checklist of equipment you'll actually need!",
+          "timestamp": "2026-10-01T10:48:20.493036+00:00"
+        }
+      ]
+    }
+  },
+  "demo-user::pipe-cleaner": {
+    "5c159cd3-74d5-4f1f-bae4-7da8dcab2659": {
+      "created_at": "2026-10-01T10:48:43.510874+00:00",
+      "messages": [
+        {
+          "role": "user",
+          "text": "how to i start pipe cleaner art",
+          "timestamp": "2026-10-01T10:49:31.373113+00:00"
+        },
+        {
+          "role": "assistant",
+          "text": "Welcome to the world of chenille stem art! It\u2019s a fantastic, low-mess, and highly addictive craft to start, and it has a massive market right now on platforms like TikTok, Instagram, and local craft fairs. \n\nHere is your practical, no-nonsense guide to getting started as a beginner\u2014with an eye toward eventually turning this into a business.\n\n---\n\n### Phase 1: Essential Tool & Material Kit\nDon't buy a giant 1,000-piece assorted bulk pack from Amazon just yet. Quality matters immensely in pipe cleaner art.\n\n1. **The Pipe Cleaners (Chenille Stems):**\n   * **Gauge & Density:** Look for stems that are **6mm thick** (the standard size for shaping) and have a high fuzz density\u2014meaning you shouldn't easily feel the metal wire underneath when you squeeze it. \n   * **Wire Core:** Standard craft stems use around 3mm wire. Avoid ultra-cheap ones where the wire snaps easily or the fuzz sheds everywhere.\n   * **Colors to start with:** Get a bundle of \"naturals\" (greens for stems/leaves, browns for stems) and a few brights (pastel pink, lavender, white, yellow) so you can make popular floral bouquets.\n\n2. **Basic Tools:**\n   * **Sharp Craft Scissors or Wire Cutters:** Regular paper scissors will get ruined quickly if you are cutting through wire. Grab a dedicated pair of wire snips or heavy-duty utility scissors.\n   * **Low-Temp Hot Glue Gun:** Crucial for securing ends, attaching leaves to stems, or assembling multi-piece sculptures. \n\n---\n\n### Phase 2: Master the 4 Fundamental Techniques\nBefore trying a complex anime character or a 50-piece bouquet, master these basic building blocks:\n\n1. **The Straight Twist:** Twisting two stems together to create a stronger, thicker \"spine\" for stems, legs, or structural support.\n2. **The Spiral / Coil:** Wrapping a stem tightly around a pencil or paintbrush to create bouncy curls (great for flower centers, animal tails, or abstract art).\n3. **The Petal Loop:** Bending a stem into a teardrop or oval shape and twisting the base to lock it in place. (This is how you make flowers).\n4. **Hiding the Ends:** The mark of a professional piece is that no sharp wire ends are poking out. Always curl, tuck, or glue the cut ends *into* the body of the design so customers won\u2019t get poked.\n\n---\n\n### Phase 3: Your First 3 Projects (Start Here)\nBuild your confidence with these high-demand, beginner-friendly items:\n\n* **Project 1: A Simple Tulip or Daisy.** (Teardrop petals glued around a yellow coiled center, attached to a green twisted stem). This teaches you shaping and assembly.\n* **Project 2: A Little Bumblebee.** (Yellow and black striped body, white loop wings). Quick to make, extremely popular, and great for practicing color blocking.\n* **Project 3: A Ribbon Bow or Heart.** Great for learning symmetry and clean lines.\n\n---\n\n### Phase 4: Shifting from Hobbyist to Seller Mindset\nSince you're looking at this from a business perspective, keep these three rules in mind from day one:\n\n* **The Durability Test:** Once you make a piece, gently squeeze it, toss it lightly on a table, and check if it loses its shape. If it\u2019s too flimsy, twist a second wire inside the core for structural integrity. Customers hate items that flop or unravel.\n* **The \"Fuzz\" Rule:** Always shake your finished piece vigorously outside before packaging. Loose fuzz from the cutting process looks unprofessional if it arrives in the customer's box.\n* **Track Your Time:** Time how long it takes you to make your very first tulip. If it takes 20 minutes, your next goal is to get that down to 10 minutes. Speed equals profit when you start pricing your labor!\n\n**Want to pick your very first project?** Let me know if you want a step-by-step guide for a beginner flower or a cute animal!",
+          "timestamp": "2026-10-01T10:49:31.377172+00:00"
         }
       ]
     }

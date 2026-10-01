@@ -1,6 +1,25 @@
 import { useState, useRef, useEffect } from "react";
 import { Send, Plus } from "lucide-react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import { DUMMY_MESSAGES } from "../../data/dummyData";
+
+const markdownComponents = {
+  p: ({ children }) => <p className="mb-2 last:mb-0 leading-relaxed">{children}</p>,
+  ul: ({ children }) => <ul className="mb-2 ml-4 list-disc space-y-1">{children}</ul>,
+  ol: ({ children }) => <ol className="mb-2 ml-4 list-decimal space-y-1">{children}</ol>,
+  li: ({ children }) => <li className="leading-relaxed">{children}</li>,
+  strong: ({ children }) => <strong className="font-semibold text-ink-900">{children}</strong>,
+  h1: ({ children }) => <p className="mb-2 mt-1 font-display text-base text-ink-900">{children}</p>,
+  h2: ({ children }) => <p className="mb-2 mt-1 font-display text-base text-ink-900">{children}</p>,
+  h3: ({ children }) => <p className="mb-1 mt-1 font-semibold text-sm text-ink-900">{children}</p>,
+  code: ({ children }) => <code className="rounded bg-clay-200 px-1 py-0.5 text-xs">{children}</code>,
+  a: ({ children, href }) => (
+    <a href={href} target="_blank" rel="noopener noreferrer" className="underline text-ochre-700">
+      {children}
+    </a>
+  ),
+};
 
 export default function ChatPanel({ category }) {
   const [messages, setMessages] = useState(DUMMY_MESSAGES);
@@ -106,8 +125,21 @@ export default function ChatPanel({ category }) {
       <div ref={scrollRef} className="flex-1 space-y-3 overflow-y-auto px-4 py-4">
         {messages.map((m) => (
           <div key={m.id} className={m.role === "user" ? "flex justify-end" : "flex justify-start"}>
-            <div className={["max-w-[85%] rounded-2xl px-4 py-2 text-sm", m.role === "user" ? "bg-ochre-500 text-white rounded-br-sm" : "bg-clay-100 text-ink-900 rounded-bl-sm"].join(" ")}>
-              {m.text}
+            <div
+              className={[
+                "max-w-[85%] rounded-2xl px-4 py-2 text-sm",
+                m.role === "user"
+                  ? "bg-ochre-500 text-white rounded-br-sm"
+                  : "bg-clay-100 text-ink-900 rounded-bl-sm",
+              ].join(" ")}
+            >
+              {m.role === "assistant" ? (
+                <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents}>
+                  {m.text}
+                </ReactMarkdown>
+              ) : (
+                m.text
+              )}
             </div>
           </div>
         ))}

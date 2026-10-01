@@ -64,3 +64,15 @@ async def get_conversations(category: str, user: dict = Depends(get_current_user
 async def clear_conversations(category: str, user: dict = Depends(get_current_user)):
     storage_service.delete_all_conversations(user["uid"], category)
     return {"status": "cleared", "category": category}
+
+
+@router.delete("/conversations/{conversation_id}")
+async def delete_one_conversation(conversation_id: str, category: str, user: dict = Depends(get_current_user)):
+    storage_service.delete_conversation(user["uid"], category, conversation_id)
+    return {"status": "deleted", "conversation_id": conversation_id}
+
+
+@router.post("/conversations/{conversation_id}/activate")
+async def activate_conversation(conversation_id: str, category: str, user: dict = Depends(get_current_user)):
+    storage_service.set_active_conversation(user["uid"], category, conversation_id)
+    return {"status": "activated", "conversation_id": conversation_id}

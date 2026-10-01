@@ -1,0 +1,51 @@
+{
+  "demo-user::resin": {
+    "11a9afc1-b8f0-4c19-af18-3087b31ae7bd": {
+      "created_at": "2026-10-01T05:52:54.333941+00:00",
+      "messages": [
+        {
+          "role": "user",
+          "text": "hello zeel this side",
+          "timestamp": "2026-10-01T05:53:08.502017+00:00"
+        },
+        {
+          "role": "assistant",
+          "text": "Hey Zeel! Great to connect with you. \n\nSince you're running a resin art (and maybe candle!) business from home, how can I help you today? Are we troubleshooting some sticky resin, trying to figure out how much to charge for a new piece, or looking at ways to scale up your shop? \n\nWhat's on your workbench today, Zeel?",
+          "timestamp": "2026-10-01T05:53:08.504793+00:00"
+        }
+      ]
+    },
+    "2a87ed1f-5d55-45d1-aaaa-96a8952eddbb": {
+      "created_at": "2026-10-01T05:53:58.603383+00:00",
+      "messages": [
+        {
+          "role": "user",
+          "text": "hello how are u??",
+          "timestamp": "2026-10-01T05:54:17.617781+00:00"
+        },
+        {
+          "role": "assistant",
+          "text": "Hello! I'm doing great, thank you for asking. How are things in your resin studio today? Are you working on any new pieces, or dealing with any questions about mixing, pricing, or troubleshooting? I'm here to help!",
+          "timestamp": "2026-10-01T05:54:17.621923+00:00"
+        }
+      ]
+    }
+  },
+  "demo-user::candle": {
+    "c82b0e8d-940c-4b2f-bd54-5fd1e113a532": {
+      "created_at": "2026-10-01T05:54:38.573414+00:00",
+      "messages": [
+        {
+          "role": "user",
+          "text": "hello i want to learn candle art",
+          "timestamp": "2026-10-01T05:54:59.800583+00:00"
+        },
+        {
+          "role": "assistant",
+          "text": "Welcome to the wonderful (and slightly addictive) world of candle art! Whether you want to make sculptural pillar candles, colourful dessert candles, or delicate floral wax melts, starting with the basics is key. \n\nSince you are diving into *art* candles rather than just standard container candles, here is a quick roadmap to get you started:\n\n### 1. Choose Your Wax Wisely\nFor art and sculptural candles, regular container soy wax (which is soft and meant to be burned in a jar) **won't work**\u2014it will melt into a puddle immediately. \n*   **Pillar/Sculptural Wax:** You want a stiffer wax blend, like a **Soy-Paraffin blend** or **Pure Beeswax / Paraffin**. These hold sharp details and shrink slightly as they cool, making them easy to pop out of silicone molds.\n*   **Container Art (e.g., bubble candles in trays, gel wax seascapes):** You can use standard Golden Wax 464 or coconut-soy for these.\n\n### 2. Essential Equipment for Art Candles\nDon't buy everything at once, but you will soon need:\n*   **Molds:** Silicone molds are best for sculptural candles (bubble cubes, female forms, bears, florals). \n*   **A Melting Pitcher & Kitchen Scale:** Always measure wax by **weight (grams)**, not volume, for consistency.\n*   **A Digital Thermometer:** Temperature control is everything in candle making (pouring too hot ruins the finish; too cold causes cracks).\n*   **Wicks & Wick Pins:** If your sculpture is meant to be burned, you need a wick. (Pro-tip: Many art candles are actually meant just for decor, but if they burn, you need the right size wick).\n\n### 3. Fun Techniques to Explore First\n*   **Embeds & Whipped Wax:** Making wax \"whipped cream\" or \"frosting\" for coffee or cake candles using a hand mixer.\n*   **Colour Blocking & Layering:** Pouring different coloured wax at angles to create modern, abstract art pieces.\n*   **Botanical Embedding:** Pressing dried flowers onto the outside of pillar candles.\n\n**Where would you like to start?** Are you interested in making **sculptural mold candles** (like bubble cubes and shapes), **dessert/food candles**, or something else? Tell me your vision and I'll give you a step-by-step guide!",
+          "timestamp": "2026-10-01T05:54:59.803387+00:00"
+        }
+      ]
+    }
+  }
+}

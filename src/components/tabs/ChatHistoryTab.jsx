@@ -1,9 +1,64 @@
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { DUMMY_CHAT_HISTORY } from "../../data/dummyData";
+
+function formatDateTime(isoTimestamp) {
+  const date = new Date(isoTimestamp);
+  const today = new Date();
+  const isToday = date.toDateString() === today.toDateString();
+  const datePart = isToday
+    ? "Today"
+    : date.toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" });
+  const timePart = date.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" });
+  return `${datePart}, ${timePart}`;
+}
+
+// Pairs a flat [{role, text, timestamp}, ...] list into [{user, ai}, ...]
+function pairMessages(flatMessages) {
+  const pairs = [];
+  let pendingUser = null;
+  for (const m of flatMessages) {
+    if (m.role === "user") {
+      pendingUser = m.text;
+    } else if (m.role === "assistant" && pendingUser !== null) {
+      pairs.push({ user: pendingUser, ai: m.text });
+      pendingUser = null;
+    }
+  }
+  return pairs;
+}
 
 export default function ChatHistoryTab({ category }) {
   const categoryId = category.id || "candle";
-  const history = DUMMY_CHAT_HISTORY[categoryId] || [];
+  const [conversations, setConversations] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [expandedId, setExpandedId] = useState(null);
+
+  function loadConversations() {
+    setLoading(true);
+    fetch(`http://localhost:8000/conversations?category=${categoryId}`)
+      .then((res) => res.json())
+      .then((data) => setConversations(data.conversations || []))
+      .catch(() => setConversations([]))
+      .finally(() => setLoading(false));
+  }
+
+  useEffect(() => {
+    loadConversations();
+  }, [categoryId]);
+
+  async function handleClearAll() {
+    try {
+      await fetch(`http://localhost:8000/conversations?category=${categoryId}`, {
+        method: "DELETE",
+      });
+    } catch (err) {
+      // Backend not running - still clear the visible list locally.
+    }
+    setConversations([]);
+  }
+
+  const nonEmptyConversations = conversations.filter((c) => c.messages.length > 0);
+  const totalConversations = nonEmptyConversations.length;
 
   return (
     <motion.div
@@ -15,65 +70,61 @@ export default function ChatHistoryTab({ category }) {
       {/* Header */}
       <div className="mb-6">
         <p className="font-display text-xl text-ink-900">💬 Chat History</p>
-        <p className="text-sm text-ink-400 mt-1">Review past conversations about {category.label.toLowerCase()}</p>
+        <p className="text-sm text-ink-400 mt-1">Past conversations about {category.label.toLowerCase()}</p>
       </div>
 
-      {/* Chat History */}
-      {history.length > 0 ? (
-        <div className="space-y-6">
-          {history.map((dayGroup, dayIdx) => (
-            <motion.div
-              key={dayIdx}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: dayIdx * 0.1 }}
-              className="space-y-3"
-            >
-              {/* Date Header */}
-              <div className="flex items-center gap-3 my-4">
-                <div className="flex-1 h-px bg-gradient-to-r from-clay-200 to-transparent" />
-                <span className="px-3 py-1 bg-clay-100 text-ink-600 font-semibold text-xs rounded-full">
-                  📅 {dayGroup.date}
-                </span>
-                <div className="flex-1 h-px bg-gradient-to-l from-clay-200 to-transparent" />
-              </div>
+      {loading ? (
+        <p className="text-center text-ink-400 text-sm py-16">Loading...</p>
+      ) : totalConversations > 0 ? (
+        <div className="space-y-4">
+          {nonEmptyConversations.map((conv) => {
+            const pairs = pairMessages(conv.messages);
+            const preview = pairs[0]?.user || "New conversation";
+            const isExpanded = expandedId === conv.conversation_id;
 
-              {/* Messages for this day */}
-              <div className="space-y-3 pl-4 border-l-2 border-ochre-300">
-                {dayGroup.messages.map((msg, msgIdx) => (
-                  <motion.div
-                    key={msgIdx}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: dayIdx * 0.1 + msgIdx * 0.05 }}
-                    className="space-y-2"
-                  >
-                    {/* User Message */}
-                    <div className="flex justify-end">
-                      <motion.div
-                        whileHover={{ scale: 1.02 }}
-                        className="max-w-xs lg:max-w-md bg-gradient-to-br from-ochre-500 to-orange-500 text-white rounded-2xl rounded-tr-sm px-5 py-3 shadow-md hover:shadow-lg transition-shadow"
-                      >
-                        <p className="text-sm">{msg.user}</p>
-                        <p className="text-xs text-white/70 mt-1">You</p>
-                      </motion.div>
-                    </div>
+            return (
+              <motion.div
+                key={conv.conversation_id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="rounded-xl border border-clay-200 bg-white overflow-hidden"
+              >
+                {/* Conversation summary - click to expand/collapse */}
+                <button
+                  onClick={() => setExpandedId(isExpanded ? null : conv.conversation_id)}
+                  className="w-full text-left px-5 py-4 hover:bg-clay-50 transition-colors flex items-center justify-between gap-4"
+                >
+                  <div className="min-w-0">
+                    <p className="text-sm font-medium text-ink-900 truncate">{preview}</p>
+                    <p className="text-xs text-ink-400 mt-1">
+                      {formatDateTime(conv.created_at)} · {pairs.length} message{pairs.length !== 1 ? "s" : ""}
+                    </p>
+                  </div>
+                  <span className="text-ink-400 text-sm shrink-0">{isExpanded ? "▲" : "▼"}</span>
+                </button>
 
-                    {/* AI Response */}
-                    <div className="flex justify-start">
-                      <motion.div
-                        whileHover={{ scale: 1.02 }}
-                        className="max-w-xs lg:max-w-md bg-gradient-to-br from-clay-100 to-clay-50 text-ink-900 rounded-2xl rounded-tl-sm px-5 py-3 border-l-4 border-ochre-400 shadow-md hover:shadow-lg transition-shadow"
-                      >
-                        <p className="text-sm leading-relaxed">{msg.ai}</p>
-                        <p className="text-xs text-ink-400 mt-2">🤖 CraftIQ Assistant</p>
-                      </motion.div>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-            </motion.div>
-          ))}
+                {/* Full thread, shown when expanded */}
+                {isExpanded && (
+                  <div className="px-5 pb-5 pt-1 space-y-3 border-t border-clay-100">
+                    {pairs.map((msg, idx) => (
+                      <div key={idx} className="space-y-2 pt-3">
+                        <div className="flex justify-end">
+                          <div className="max-w-xs lg:max-w-md bg-ochre-500 text-white rounded-2xl rounded-tr-sm px-4 py-2 text-sm">
+                            {msg.user}
+                          </div>
+                        </div>
+                        <div className="flex justify-start">
+                          <div className="max-w-xs lg:max-w-md bg-clay-100 text-ink-900 rounded-2xl rounded-tl-sm px-4 py-2 text-sm">
+                            {msg.ai}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </motion.div>
+            );
+          })}
         </div>
       ) : (
         <motion.div
@@ -83,55 +134,44 @@ export default function ChatHistoryTab({ category }) {
         >
           <p className="text-3xl mb-3">💭</p>
           <p className="text-ink-600 font-semibold">No chat history yet</p>
-          <p className="text-ink-400 text-sm mt-2">Start a conversation with the AI assistant to see your chat history here!</p>
+          <p className="text-ink-400 text-sm mt-2">Start a conversation with the AI assistant to see it listed here.</p>
         </motion.div>
       )}
 
       {/* Quick Actions */}
-      {history.length > 0 && (
+      {totalConversations > 0 && (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-          className="p-5 rounded-xl bg-gradient-to-r from-indigo-50 to-purple-50 border-2 border-indigo-200 space-y-4"
+          className="p-5 rounded-xl bg-indigo-50 border border-indigo-200 space-y-4"
         >
-          <p className="font-semibold text-ink-900">💡 Quick Actions:</p>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="px-4 py-2 bg-white border-2 border-indigo-200 text-indigo-700 font-medium rounded-lg hover:bg-indigo-50 transition-all"
+          <p className="font-semibold text-ink-900">Quick Actions:</p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+            <button
+              onClick={loadConversations}
+              className="px-4 py-2 bg-white border border-indigo-200 text-indigo-700 font-medium rounded-lg hover:bg-indigo-100 transition-colors"
             >
-              📋 Export Chat
-            </motion.button>
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="px-4 py-2 bg-white border-2 border-indigo-200 text-indigo-700 font-medium rounded-lg hover:bg-indigo-50 transition-all"
+              🔄 Refresh
+            </button>
+            <button
+              onClick={handleClearAll}
+              className="px-4 py-2 bg-white border border-indigo-200 text-indigo-700 font-medium rounded-lg hover:bg-indigo-100 transition-colors"
             >
-              🔍 Search History
-            </motion.button>
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="px-4 py-2 bg-white border-2 border-indigo-200 text-indigo-700 font-medium rounded-lg hover:bg-indigo-50 transition-all"
-            >
-              🗑️ Clear History
-            </motion.button>
+              🗑️ Clear All Conversations
+            </button>
           </div>
         </motion.div>
       )}
 
       {/* Stats */}
-      {history.length > 0 && (
+      {totalConversations > 0 && (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
-          className="p-4 rounded-xl bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-200"
+          className="p-4 rounded-xl bg-green-50 border border-green-200"
         >
           <p className="text-sm font-semibold text-green-900">
-            ✨ <span className="text-lg text-emerald-600">{history.length}</span> conversation{history.length !== 1 ? 's' : ''} saved
+            ✨ <span className="text-lg text-emerald-600">{totalConversations}</span> conversation{totalConversations !== 1 ? "s" : ""} saved
           </p>
           <p className="text-xs text-green-700 mt-2">💾 Your chat data is saved locally and never shared</p>
         </motion.div>

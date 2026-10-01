@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { Send } from "lucide-react";
+import { Send, Plus } from "lucide-react";
 import { DUMMY_MESSAGES } from "../../data/dummyData";
 
 export default function ChatPanel({ category }) {
@@ -8,11 +8,35 @@ export default function ChatPanel({ category }) {
   const [isThinking, setIsThinking] = useState(false);
   const scrollRef = useRef(null);
 
+  function loadHistory() {
+    fetch(`http://localhost:8000/chat-history?category=${category.id}`)
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.messages && data.messages.length > 0) {
+          const loaded = data.messages.map((m, idx) => ({
+            id: `history-${idx}-${m.timestamp}`,
+            role: m.role,
+            text: m.text,
+          }));
+          setMessages(loaded);
+        } else {
+          setMessages(DUMMY_MESSAGES);
+        }
+      })
+      .catch(() => {
+        setMessages(DUMMY_MESSAGES);
+      });
+  }
+
+  useEffect(() => {
+    loadHistory();
+  }, [category.id]);
+
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
   }, [messages, isThinking]);
 
-  function handleSend(e) {
+  async function handleSend(e) {
     e.preventDefault();
     const text = input.trim();
     if (!text) return;
@@ -21,20 +45,62 @@ export default function ChatPanel({ category }) {
     setInput("");
     setIsThinking(true);
 
-    setTimeout(() => {
+    try {
+      const response = await fetch("http://localhost:8000/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          category: category.id,
+          message: text,
+          chat_history: messages.map((m) => ({ role: m.role, text: m.text })),
+        }),
+      });
+
+      const data = await response.json();
+
       setMessages((prev) => [
         ...prev,
-        { id: Date.now() + 1, role: "assistant", text: `(demo reply) Once connected, I'll answer ${category.label.toLowerCase()} questions here using live data.` },
+        { id: Date.now() + 1, role: "assistant", text: data.reply },
       ]);
+    } catch (err) {
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: Date.now() + 1,
+          role: "assistant",
+          text: "Couldn't reach the server. Is the backend running on localhost:8000?",
+        },
+      ]);
+    } finally {
       setIsThinking(false);
-    }, 700);
+    }
+  }
+
+  async function handleNewChat() {
+    try {
+      await fetch(`http://localhost:8000/chat/new?category=${category.id}`, {
+        method: "POST",
+      });
+    } catch (err) {
+      // Backend not running - still reset the visible chat locally.
+    }
+    setMessages(DUMMY_MESSAGES);
   }
 
   return (
     <aside className="flex h-full w-full flex-col rounded-xl border border-clay-200 bg-white">
-      <div className="border-b border-clay-200 px-4 py-3">
-        <p className="font-display text-base text-ink-900">Craft Assistant</p>
-        <p className="text-xs text-ink-400">Ask anything about {category.label.toLowerCase()}</p>
+      <div className="flex items-center justify-between border-b border-clay-200 px-4 py-3">
+        <div>
+          <p className="font-display text-base text-ink-900">Craft Assistant</p>
+          <p className="text-xs text-ink-400">Ask anything about {category.label.toLowerCase()}</p>
+        </div>
+        <button
+          onClick={handleNewChat}
+          className="flex items-center gap-1 rounded-lg border border-clay-200 px-3 py-1.5 text-xs font-medium text-ink-600 hover:bg-clay-100"
+        >
+          <Plus size={14} />
+          New Chat
+        </button>
       </div>
 
       <div ref={scrollRef} className="flex-1 space-y-3 overflow-y-auto px-4 py-4">

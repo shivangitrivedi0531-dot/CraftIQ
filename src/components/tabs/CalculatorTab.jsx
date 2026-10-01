@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { DUMMY_CALCULATOR_MATERIALS } from "../../data/dummyData";
 
@@ -6,18 +6,41 @@ export default function CalculatorTab({ category }) {
   const categoryId = category.id || "candle";
   const materials = DUMMY_CALCULATOR_MATERIALS[categoryId] || [];
   const [quantities, setQuantities] = useState({});
+  const [totalCost, setTotalCost] = useState(0);
+  const [suggestedPrice, setSuggestedPrice] = useState(0);
+  const [profit, setProfit] = useState(0);
 
-  // Calculate total material cost
-  const totalCost = Object.entries(quantities).reduce((sum, [idx, qty]) => {
-    const cost = materials[idx]?.cost || 0;
-    return sum + (cost * (parseFloat(qty) || 0));
-  }, 0);
+  // Ask the real backend for the cost breakdown whenever quantities change.
+  useEffect(() => {
+    const hasAnyQuantity = Object.values(quantities).some((v) => parseFloat(v) > 0);
+    if (!hasAnyQuantity) {
+      setTotalCost(0);
+      setSuggestedPrice(0);
+      setProfit(0);
+      return;
+    }
 
-  // Suggested selling price (2.5x markup for profit margin)
-  const suggestedPrice = Math.round(totalCost * 2.5);
+    const numericQuantities = {};
+    Object.entries(quantities).forEach(([idx, val]) => {
+      const num = parseFloat(val);
+      if (num > 0) numericQuantities[idx] = num;
+    });
 
-  // Profit margin
-  const profit = suggestedPrice - totalCost;
+    fetch(`http://localhost:8000/calculator/${categoryId}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ quantities: numericQuantities }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setTotalCost(data.total_cost);
+        setSuggestedPrice(data.suggested_price);
+        setProfit(data.profit);
+      })
+      .catch(() => {
+        // Backend not running, or category has no calculator - keep showing 0s.
+      });
+  }, [quantities, categoryId]);
 
   const handleQuantityChange = (index, value) => {
     setQuantities({ ...quantities, [index]: value });

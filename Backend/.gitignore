@@ -4,3 +4,12 @@ __pycache__/
 venv/
 .venv/
 app/data/chat_history.json
+serviceAccountKey.json
+serviceAccount*.json
+firebase-credentials.json
+*.pem
+*.json.secret
+craftiq.db
+*.db
+*.sqlite
+*.sqlite3

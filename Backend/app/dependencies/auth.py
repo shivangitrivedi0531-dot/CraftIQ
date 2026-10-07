@@ -1,23 +1,57 @@
-"""
-CONTRACT for Shivangi:
-Replace only the body of get_current_user() with real Firebase ID token
-verification. Keep the function name, the `Depends(get_current_user)` usage
-pattern, and the returned dict shape ({"uid": ..., "email": ...}) identical -
-every other router already imports and depends on this exact function.
+import jwt
+from fastapi import Depends, Header, HTTPException, status
+from sqlalchemy.orm import Session
 
-Real version will look roughly like:
-    from firebase_admin import auth as firebase_auth
-    def get_current_user(authorization: str = Header(None)):
-        token = authorization.replace("Bearer ", "")
-        decoded = firebase_auth.verify_id_token(token)
-        return {"uid": decoded["uid"], "email": decoded.get("email")}
-"""
-
-from fastapi import Header
+from app.core.security import decode_access_token
+from app.database import get_db
+from app.models.user import User
 
 
-def get_current_user(authorization: str = Header(default=None)):
-    # TODO (Shivangi): replace this stub with real Firebase token verification.
-    # For now every request is treated as this one demo user so Member 2 and
-    # Member 3's routes can be built and tested independently.
-    return {"uid": "demo-user", "email": "demo@example.com"}
+def get_current_user(
+    authorization: str = Header(default=None),
+    db: Session = Depends(get_db),
+) -> dict:
+    """
+    Validates PyJWT Bearer tokens from the Authorization header and retrieves user details.
+    Preserves the exact return shape {"uid": ..., "email": ...} required by dependent routers.
+    FastAPI automatically executes sync dependency functions in a background threadpool.
+    """
+    if not authorization or not authorization.startswith("Bearer "):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Missing or invalid authorization header",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
+    token = authorization.replace("Bearer ", "").strip()
+
+    try:
+        payload = decode_access_token(token)
+        sub = payload.get("sub")
+        exp = payload.get("exp")
+        iat = payload.get("iat")
+
+        if not sub or exp is None or iat is None:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Invalid token claims",
+                headers={"WWW-Authenticate": "Bearer"},
+            )
+
+        user_id = int(sub)
+    except (jwt.PyJWTError, ValueError, TypeError):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid or expired token",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
+    user = db.query(User).filter(User.id == user_id).first()
+    if user is None:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="User account no longer exists",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
+    return {"uid": str(user.id), "email": user.email}

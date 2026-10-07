@@ -1,7 +1,11 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.routers import chat, calculator
+from app.database import Base, engine
+from app.routers import chat, calculator, auth, profile
+
+# Ensure database tables exist at application startup
+Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="CraftIQ Backend")
 
@@ -17,6 +21,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+app.include_router(auth.router, tags=["auth"])
+app.include_router(profile.router, tags=["profile"])
 app.include_router(chat.router, tags=["chat"])
 app.include_router(calculator.router, tags=["calculator"])
 

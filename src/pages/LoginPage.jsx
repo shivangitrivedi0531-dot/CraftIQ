@@ -1,14 +1,21 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext'
 import './Auth.css'
 
 export default function LoginPage() {
   const navigate = useNavigate()
+  const { login, signup, loginWithGoogleCode } = useAuth()
   const [isSignUp, setIsSignUp] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [isLoaded, setIsLoaded] = useState(false)
-  
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isGoogleScriptLoaded, setIsGoogleScriptLoaded] = useState(false)
+
+  const codeClientRef = useRef(null)
+  const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID
+
   // Mouse position tracking with smooth lerp
   const containerRef = useRef(null)
   const targetMouse = useRef({ x: 0, y: 0, nx: 0, ny: 0 })
@@ -37,6 +44,120 @@ export default function LoginPage() {
 
   // Toast feedback message
   const [toastMessage, setToastMessage] = useState('')
+
+  const triggerToast = (msg) => {
+    setToastMessage(msg)
+    setTimeout(() => setToastMessage(''), 3500)
+  }
+
+  // Handle Google Authorization Code Response
+  const handleGoogleCodeResponse = useCallback(
+    async (code) => {
+      if (!code) {
+        triggerToast('⚠️ Google Sign-In failed: No authorization code received.')
+        return
+      }
+
+      setIsSubmitting(true)
+      try {
+        await loginWithGoogleCode(code)
+        triggerToast('🎨 Entering your creative space…')
+        setTimeout(() => navigate('/categories'), 300)
+      } catch (err) {
+        if (err.status === 409) {
+          triggerToast('⚠️ An account with this email already exists. Please sign in using your email and password.')
+        } else {
+          triggerToast(`⚠️ ${err.message || 'Google authentication failed'}`)
+        }
+      } finally {
+        setIsSubmitting(false)
+      }
+    },
+    [loginWithGoogleCode, navigate]
+  )
+
+  // Keep ref updated to avoid stale callbacks
+  const codeCallbackRef = useRef(handleGoogleCodeResponse)
+  useEffect(() => {
+    codeCallbackRef.current = handleGoogleCodeResponse
+  }, [handleGoogleCodeResponse])
+
+  // Initialize Google Identity Services OAuth 2.0 Code Client (popup mode)
+  useEffect(() => {
+    if (!googleClientId) return
+
+    let isMounted = true
+
+    const initCodeClient = () => {
+      if (!isMounted) return
+
+      try {
+        if (window.google?.accounts?.oauth2) {
+          codeClientRef.current = window.google.accounts.oauth2.initCodeClient({
+            client_id: googleClientId,
+            scope: 'openid email profile',
+            ux_mode: 'popup',
+            callback: (response) => {
+              if (response.error) {
+                if (response.error !== 'popup_closed_by_user') {
+                  triggerToast(`⚠️ Google Sign-In error: ${response.error}`)
+                }
+                return
+              }
+              if (response.code && codeCallbackRef.current) {
+                codeCallbackRef.current(response.code)
+              }
+            },
+          })
+          if (isMounted) {
+            setIsGoogleScriptLoaded(true)
+          }
+        }
+      } catch (err) {
+        console.error('Error initializing Google Code Client:', err)
+      }
+    }
+
+    const existingScript = document.querySelector('script[src="https://accounts.google.com/gsi/client"]')
+    if (existingScript) {
+      if (window.google?.accounts?.oauth2) {
+        initCodeClient()
+      } else {
+        existingScript.addEventListener('load', initCodeClient)
+      }
+    } else {
+      const script = document.createElement('script')
+      script.src = 'https://accounts.google.com/gsi/client'
+      script.async = true
+      script.defer = true
+      script.onload = initCodeClient
+      script.onerror = () => {
+        if (isMounted) {
+          setIsGoogleScriptLoaded(false)
+        }
+      }
+      document.body.appendChild(script)
+    }
+
+    return () => {
+      isMounted = false
+    }
+  }, [googleClientId])
+
+  const handleGoogleSignIn = () => {
+    if (!googleClientId) {
+      triggerToast('⚠️ Google Sign-In is not configured. Missing VITE_GOOGLE_CLIENT_ID in environment variables.')
+      return
+    }
+    if (!codeClientRef.current) {
+      triggerToast('⚠️ Google Sign-In script failed to load. Please check your network or ad blocker.')
+      return
+    }
+
+    codeClientRef.current.requestCode()
+  }
+
+
 
   useEffect(() => {
     // Initial page load trigger
@@ -80,11 +201,6 @@ export default function LoginPage() {
     }
   }, [])
 
-  const triggerToast = (msg) => {
-    setToastMessage(msg)
-    setTimeout(() => setToastMessage(''), 3000)
-  }
-
   const handleMouseMove = (e) => {
     if (!containerRef.current) return
     const rect = containerRef.current.getBoundingClientRect()
@@ -110,25 +226,51 @@ export default function LoginPage() {
     }))
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    if (isSignUp) {
-      if (formData.password !== formData.confirmPassword) {
-        triggerToast('⚠️ Passwords do not match!')
-        return
+    if (isSubmitting) return
+
+    setIsSubmitting(true)
+    try {
+      if (isSignUp) {
+        if (formData.password !== formData.confirmPassword) {
+          triggerToast('⚠️ Passwords do not match!')
+          setIsSubmitting(false)
+          return
+        }
+        await signup({
+          fullName: formData.fullName,
+          email: formData.email,
+          password: formData.password
+        })
+        triggerToast('🌿 Account created! Entering Studio…')
+        setTimeout(() => navigate('/categories'), 300)
+      } else {
+        await login({
+          email: formData.email,
+          password: formData.password
+        })
+        triggerToast('🎨 Entering your creative space…')
+        setTimeout(() => navigate('/categories'), 300)
       }
-      triggerToast('🌿 Welcome to your CraftIQ Studio!')
-      setTimeout(() => navigate('/categories'), 300)
-    } else {
-      triggerToast('🎨 Entering your creative space...')
-      setTimeout(() => navigate('/categories'), 300)
+    } catch (err) {
+      triggerToast(`⚠️ ${err.message || 'Authentication failed'}`)
+    } finally {
+      setIsSubmitting(false)
     }
   }
 
-  const handleGoogleSignIn = () => {
-    triggerToast('🌐 Continuing with Google...')
-    setTimeout(() => navigate('/categories'), 300)
+  const handleGoogleSignInFallback = () => {
+    if (!googleClientId) {
+      triggerToast('⚠️ Google Sign-In is not configured. Missing VITE_GOOGLE_CLIENT_ID in environment variables.')
+      return
+    }
+    if (!isGoogleScriptLoaded || !window.google?.accounts?.id) {
+      triggerToast('⚠️ Google Sign-In script failed to load. Please check your network or ad blocker.')
+      return
+    }
   }
+
 
   return (
     <div
@@ -503,8 +645,8 @@ export default function LoginPage() {
               </div>
 
               {/* Primary Button */}
-              <button type="submit" className="btn-submit">
-                <span>{isSignUp ? 'Create Account →' : 'Enter Studio →'}</span>
+              <button type="submit" className="btn-submit" disabled={isSubmitting}>
+                <span>{isSubmitting ? 'Processing…' : (isSignUp ? 'Create Account →' : 'Enter Studio →')}</span>
               </button>
             </form>
 

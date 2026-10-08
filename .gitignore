@@ -159,4 +159,8 @@ dist
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 .vite/
- a666bb05e3e056b1892afb15f2f4da7a8d0bdd09
+
+# Key notes & secrets
+API KEYS DOC D.txt
+*KEY*.txt
+*.zip

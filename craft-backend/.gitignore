@@ -1,0 +1,12 @@
+.env
+__pycache__/
+*.py[cod]
+*$py.class
+.DS_Store
+venv/
+.vscode/
+fetch_*.py
+build_*.py
+merge_*.py
+search_*.py
+pipe_cleaner_results.json

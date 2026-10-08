@@ -40,14 +40,14 @@ CATEGORY_METADATA = {
 VERIFIED_REAL_ARTISTS = {
     "resin": [
         {
-            "name": "Shikha Kothari",
-            "handle": "@shikhakothari_",
-            "followers": "276K",
-            "bio": "Luxury resin preservation artist. 50k+ custom orders, 30k+ students trained. Famous for wedding varmala and floral memory preservation.",
-            "signature_style": "Flower & Varmala Preservation",
-            "location": "Mumbai, India",
+            "name": "Deshna Shah (Resinn Cornerr)",
+            "handle": "@resinn_cornerr",
+            "followers": "15.8K",
+            "bio": "Indian small business dedicated to handmade resin art and personalized keepsakes. Specializing in preserving wedding garlands, rose petals, and festive memories.",
+            "signature_style": "Memory & Floral Preservation",
+            "location": "India",
             "badge": "Top Creator",
-            "url": "https://www.instagram.com/shikhakothari_/"
+            "url": "https://www.instagram.com/resinn_cornerr/"
         },
         {
             "name": "Poonam Shah",
